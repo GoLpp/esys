@@ -1,0 +1,45 @@
+package com.qfedu.esys.test;
+import javax.annotation.Resource;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.qfedu.esys.dao.IRoleDao;
+import com.qfedu.esys.entity.Role;
+
+@RunWith(SpringJUnit4ClassRunner.class) // 表示整合JUnit4进行测试
+@ContextConfiguration(locations = { "classpath:applicationContext.xml" }) // 加载spring配置文件
+public class TestUserDao {
+	
+	@Resource
+	private IRoleDao roleDao;
+	
+	@Resource
+	private SessionFactory sessionFactory;
+	
+	private final static Logger LOG = LogManager.getLogger(TestUserDao.class);
+	
+	@Test
+	// @Transactional
+	// @Rollback(false)
+	public void test01 () {
+		Role r = new Role();
+		r.setName("test01");
+		r.setDescription("test");
+		Session s = sessionFactory.openSession();
+		// roleDao.create(r);
+		Transaction t = s.beginTransaction();
+		s.persist(r);
+		LOG.info("persist...");
+		//sessionFactory.getCurrentSession().close();
+		t.commit();
+		s.close();
+	}
+}

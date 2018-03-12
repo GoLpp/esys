@@ -1,0 +1,31 @@
+package com.qfedu.esys.dao.impl;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.hibernate.SessionFactory;
+import org.springframework.stereotype.Repository;
+
+import com.qfedu.esys.dao.IUserDao;
+import com.qfedu.esys.entity.User;
+
+@Repository
+public class UserDao implements IUserDao {
+	private final static Logger LOG = LogManager.getLogger(UserDao.class);
+
+	@Resource
+	private SessionFactory sessionFactory;
+	
+	@Override
+	public List<User> findAll() {
+		String hql = "from User u";
+		return sessionFactory.getCurrentSession().createQuery(hql, User.class).list();
+	}
+
+	@Override
+	public void create(User u) {
+		sessionFactory.getCurrentSession().persist(u);
+	}
+}

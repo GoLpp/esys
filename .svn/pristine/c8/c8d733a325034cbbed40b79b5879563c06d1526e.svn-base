@@ -1,0 +1,109 @@
+package com.qfedu.esys.dao.impl;
+
+import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
+
+import com.qfedu.esys.dao.IBaseDao;
+
+// @Repository
+@SuppressWarnings(value = { "unchecked" })
+public class BaseDao<E> implements IBaseDao<E> {
+	private final static Logger LOG = LogManager.getLogger(BaseDao.class);
+
+	private Class<?> entityClass;
+	private String entityName;
+
+	public BaseDao() {
+		ParameterizedType pt = (ParameterizedType) this.getClass().getGenericSuperclass();
+		entityClass = (Class<?>) pt.getActualTypeArguments()[0];
+		entityName = entityClass.getSimpleName();
+	}
+
+	@Resource
+	protected SessionFactory sessionFactory;
+
+	/**
+	 * 
+	 * @return
+	 */
+	protected Session getSession() {
+		return sessionFactory.getCurrentSession();
+	}
+
+	@Override
+	public void create(E entity) {
+		getSession().persist(entity);
+	}
+
+	@Override
+	public void delete(E entity) {
+		getSession().delete(entity);
+	}
+
+	@Override
+	public boolean deleteById(Serializable id) {
+		E entity = findById(id);
+		if (entity != null) {
+			delete(entity);
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void update(E entity) {
+		getSession().merge(entity);
+	}
+
+	@Override
+	public E findById(Serializable id) {
+		return (E) getSession().get(entityClass, id);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.qf.wobb.dao.IBaseDao#findBy(java.util.Map)
+	 */
+	public E findBy(Map<String, Object> props) {
+		List<E> list = findAllBy(props);
+		return list.size() == 1 ? list.get(0) : null;
+	}
+
+	public List<E> findAll () {
+		return findAllBy(null);
+	}
+	
+	public List<E> findAllBy(Map<String, Object> props) {
+		String hsql = "";
+		if (props != null && props.size() > 0) {
+			for (String key : props.keySet()) {
+				if (!hsql.equals("")) {
+					hsql += " and ";
+				}
+				hsql += " u." + key + " = :" + key.replace('.', '_');
+			}
+			hsql = "from " + entityName + " u where " + hsql;
+		} else {
+			hsql = "from " + entityName + " u";
+		}
+		LOG.info(hsql);
+		Query query = getSession().createQuery(hsql, entityClass);
+		if (props != null && props.size() > 0) {
+			for (String key : props.keySet()) {
+				query.setParameter(key.replace('.', '_'), props.get(key));
+			}
+		}
+		return (List<E>) query.getResultList();
+	}
+}

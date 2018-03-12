@@ -1,0 +1,49 @@
+package com.qfedu.esys.controller;
+import javax.annotation.Resource;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.qfedu.common.entity.WoPage;
+import com.qfedu.common.entity.WoResultCode;
+import com.qfedu.common.util.WoUtil;
+import com.qfedu.esys.dto.UserDto;
+import com.qfedu.esys.service.IUserService;
+import com.qfedu.esys.vo.GridEuiVo;
+
+@RestController
+@RequestMapping("/sys/user/")
+public class UserController {
+	private final static Logger LOG = LogManager.getLogger(UserController.class);
+	
+	@Resource // @Autowired
+	private IUserService userService;
+	
+	@RequestMapping("/list")
+    public GridEuiVo<UserDto> getList(String loginName, Long page, Long rows) {
+        WoPage<UserDto> dto = userService.getList(loginName, (page - 1) * rows, rows);
+        return new GridEuiVo <UserDto> (dto);
+    }
+
+    @RequestMapping("/delete")
+    public WoResultCode delete(String woSelectedIds) {
+        String[] ids = WoUtil.splitIds(woSelectedIds);
+        userService.delete(ids);
+        return WoResultCode.getSuccessCode();
+    }
+    
+    @RequestMapping("/create")
+    public WoResultCode create (UserDto u) {
+    	userService.create (u);
+        return WoResultCode.getSuccessCode();
+    }
+    
+    @RequestMapping("/update")
+    public WoResultCode update (UserDto u) {
+    	userService.update (u);
+        return WoResultCode.getSuccessCode();
+    }
+	
+}

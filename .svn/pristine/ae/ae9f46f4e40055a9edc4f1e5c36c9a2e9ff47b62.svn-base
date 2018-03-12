@@ -1,0 +1,149 @@
+var Sys = {};
+Sys.MenuGrid = function(options) {
+	var tableId = 'woTable_' + options.woNodeId;
+	// 在tabs上增加一个tabpanel
+	$('#' + options.woTabId).tabs('add', {
+		title : options.woNodeText,
+		content : '<table id="' + tableId + '"></table>',
+		closable : true
+	});
+	$('#' + tableId).wogrid({
+		woId : tableId,
+		woTitle : options.woNodeText,
+		url : 'sys/menu/list',
+		idField : 'id',
+		treeField : 'name',
+		textField : 'name',
+		parentField : 'parentId',
+		woGridType : 'Tree',
+		// pagination : true,
+		singleSelect : true,
+		woDeleteUrl : 'sys/menu/delete',
+		woCreateUrl : 'sys/menu/create',
+		woUpdateUrl : 'sys/menu/update',
+		columns : [ [ {
+			field : 'id',
+			title : 'ID',
+			width : 50,
+			hidden : true,
+			woUpdate : {
+				readonly : true
+			}
+		}, {
+			field : 'name',
+			title : '名称',
+			width : 150,
+			woCreate : {},
+			woUpdate : {}
+		}, {
+			field : 'no',
+			title : '编号',
+			width : 50,
+			hidden : true
+		}, {
+			field : 'icon',
+			title : '图标',
+			width : 50,
+			woCreate : {},
+			woUpdate : {}
+		}, {
+			field : 'resource',
+			title : '资源',
+			width : 150,
+			woCreate : {},
+			woUpdate : {}
+		}, {
+			field : 'resourceType',
+			title : '资源类型',
+			width : 150,
+			woCreate : {},
+			woUpdate : {}
+		}, {
+			field : 'parentId',
+			title : '上级ID',
+			width : 50,
+			hidden : true,
+			woCreate : {},
+			woUpdate : {}
+		}, {
+			field : 'parentName',
+			title : '上级名称',
+			width : 100
+		} ] ],
+		woCreateForm : {
+			woFields : [ {
+				woType : 'combotree',
+				woName : 'parentId',
+				label : '上级',
+				idField : 'id',
+				textField : 'name',
+				treeField : 'name',
+				parentField : 'parentId',
+				width : 200,
+				panelWidth : 300,
+				url : 'sys/menu/getChildren',
+				woColSpan : 1,
+				columns : [ [ {
+					field : 'id',
+					title : 'ID',
+					width : 50
+				}, {
+					field : 'name',
+					title : '名称',
+					width : 100
+				}, {
+					field : 'parentId',
+					title : '上级ID',
+					width : 50
+				} ] ]
+			} ],
+			woButtons : [ {
+				woButtonType : 'woSave'
+			}, {
+				woButtonType : 'woCancel'
+			} ]
+		},
+		woUpdateForm : {
+			woFields : [ {
+				woType : 'combotree',
+				woName : 'parentId',
+				label : '上级',
+				idField : 'id',
+				textField : 'name',
+				treeField : 'name',
+				parentField : 'parentId',
+				width : 200,
+				panelWidth : 300,
+				url : 'sys/menu/getChildren',
+				woColSpan : 1,
+				columns : [ [ {
+					field : 'id',
+					title : 'ID',
+					width : 50
+				}, {
+					field : 'name',
+					title : '名称',
+					width : 100
+				}, {
+					field : 'parentId',
+					title : '上级ID',
+					width : 50
+				} ] ]
+			} ],
+			woButtons : [ {
+				woButtonType : 'woSave'
+			}, {
+				woButtonType : 'woCancel'
+			} ]
+		},
+		toolbar : [ {
+			woButtonType : 'woCreate'
+		}, {
+			woButtonType : 'woEdit'
+		}, {
+			woButtonType : 'woDelete'
+		}, {
+			woButtonType : 'woClear'
+		} ]
+	});
+};

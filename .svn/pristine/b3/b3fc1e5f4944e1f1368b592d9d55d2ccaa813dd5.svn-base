@@ -1,0 +1,54 @@
+package com.qfedu.esys.controller;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.qfedu.common.WoResultCode;
+import com.qfedu.esys.entity.User;
+import com.qfedu.esys.service.IUserService;
+import com.qfedu.esys.vo.GridEuiVo;
+
+@Controller
+@RequestMapping("/sys/user")
+public class UserController {
+	private final static Logger LOG = LogManager.getLogger(UserController.class);
+	
+	@Resource
+	private IUserService userService;
+	
+	@RequestMapping(value="/crud")
+	public ModelAndView toMain () {
+		ModelAndView m = new ModelAndView();
+		m.setViewName("user");
+		return m;
+	}
+	
+	@RequestMapping(value="/crud2")
+	public ModelAndView toMain2 () {
+		ModelAndView m = new ModelAndView();
+		m.setViewName("user2");
+		return m;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/list", produces = "application/json")
+	public GridEuiVo<User> getList() {
+		List<User> list = userService.getList();
+		GridEuiVo<User> grid = new GridEuiVo<User>(list, Long.valueOf(list.size()));
+		return grid;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/create", produces = "application/json")
+	public WoResultCode create (User u) {
+		userService.create(u);
+		return WoResultCode.getSuccessCode();
+	}
+}

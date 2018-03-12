@@ -1,0 +1,46 @@
+package com.qfedu.esys.vo;
+
+import java.util.List;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
+/**
+ * EasyUI表格需要返回的数据对象.
+ * @author cailei
+ *
+ * @param <T>
+ */
+public class GridEuiVo <T> {
+	
+	@SuppressWarnings("unused")
+	private final static Logger LOG = LogManager.getLogger(GridEuiVo.class);
+	
+	public GridEuiVo (List<T> rows, Long total) {
+		this.setRows(rows);
+		this.setTotal(total);
+	}
+	
+	public GridEuiVo() {
+	}
+	
+	private Long total = 0L;
+	
+	private List<T> rows;
+
+	public List<T> getRows() {
+		return rows;
+	}
+
+	public void setRows(List<T> rows) {
+		this.rows = rows;
+	}
+
+	public Long getTotal() {
+		return total;
+	}
+
+	public void setTotal(Long total) {
+		this.total = total;
+	}
+}
