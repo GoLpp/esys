@@ -1,5 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	
+<%
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/";
+%>
 <%
 	String woWelcomeMsg = (String)request.getAttribute ("woWelcomeMsg");
 	Boolean woLogin = (Boolean)request.getAttribute ("woLogin");
@@ -7,6 +11,7 @@
 		woLogin = false;
 	}
 %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,6 +29,9 @@
 	<script type="text/javascript" src="js/app/sys.js"></script>
 	<script type="text/javascript">
 		var woLogin = <%=woLogin%>;
+		function changeImage(obj) {
+			obj.src = "<%=basePath%>/code?i=" + Math.random();
+		}
 	</script>
 	<style type="text/css">
 		#fm{
@@ -38,7 +46,8 @@
 			border-bottom:1px solid #ccc;
 		}
 		.fitem{
-			margin-bottom:5px;
+			height: 30px;
+			margin-bottom:10px;
 		}
 		.fitem label{
 			display:inline-block;
@@ -72,23 +81,34 @@
 			</ul>
 		</div>
 	</div>
-	<div id="woDlgLogin" class="easyui-dialog" style="width:400px;height:200px;padding:10px 20px"
-			closed="true" buttons="#woButtonsLogin" modal="true" title="登录">
+	<div id="woDlgLogin" class="easyui-dialog" style="width:400px;height:300px;padding:10px 20px"
+			closed="true" buttons="#user" modal="true" title="登录">
 		<div class="ftitle">请输入登录信息：</div>
 		<form id="woFormLogin" method="post" novalidate>
 			<div class="fitem">
 				<label>登录名:</label>
-				<input name="user" class="easyui-textbox" required="true">
+				<input name="user" class="easyui-textbox"  data-options="iconCls:'icon-man'" required="true" style="height:30px;">
 			</div>
 			<div class="fitem">
 				<label>密码:</label>
-				<input name="password" type="password" class="easyui-textbox" required="true">
+				<input name="password" type="password" class="easyui-textbox" data-options="iconCls:'icon-lock'" style="height:30px; required="true">
 			</div>
+			<div class="fitem">
+				<label>验证码：</label>
+				<input name="num" class="easyui-textbox"  style="width:80px; height: 30px" />
+				<div style="margin-left:200px">
+					<img class="img" title="看不清，换一张" onclick="changeImage(this)">  
+				</div>
+			</div>			
 		</form>
-		<div id="woButtonsLogin">
-			<a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" style="width:90px">登录</a>
-		</div>
 	</div>
-	
+	<div id="user" style="float:right;">
+		<div id="woButtonsLogin" style="float:right;">
+			<a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" style="width:90px">登录</a>		
+		</div>
+		<div id="woButtonsRigister" style="float:right;">
+			<a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" style="width:90px">注册</a>
+		</div>
+	</div>	
 </body>
 </html>

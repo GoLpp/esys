@@ -66,7 +66,9 @@ public class HomeController {
 	
 	@ResponseBody
 	@RequestMapping (value="/authentication", produces = ESysConstant.APP_JSON)
-	public WoResultCode login (String user, String password, Map<String, Object> model) {
+	public WoResultCode login (String user, String password, Map<String, Object> model, HttpServletRequest request) {
+		String code = (String) request.getSession().getAttribute("code");
+		LOG.info("-----" + code);
 		try {
 			UserDto u = userService.authenticate (user, password);
 			model.put (ESysConstant.SESSION_USER, u);
