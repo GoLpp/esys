@@ -103,11 +103,11 @@
 		</form>
 	</div>
 	<div id="user" style="float:right;">
-		<div id="woButtonsLogin" style="float:right;">
-			<a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" style="width:90px">登录</a>		
-		</div>
 		<div id="woButtonsRigister" style="float:right;">
 			<a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" style="width:90px">注册</a>
+		</div>
+		<div id="woButtonsLogin" style="float:right;">
+			<a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" style="width:90px">登录</a>		
 		</div>
 	</div>	
 </body>
